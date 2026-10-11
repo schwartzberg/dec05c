@@ -1,0 +1,63 @@
+{
+  "author": "Schwartzberg, Paul",
+  "source_page": "https://commons.wikimedia.org/wiki/File:Panthera_tigris_tigris_original.jpg",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Panthera_tigris_tigris_original.jpg",
+  "image_credit": "John and Karen Hollingsworth, U.S. Fish and Wildlife Service; public domain in the United States",
+  "stretch_factor": 1.1,
+  "results": {
+    "original": {
+      "tensor_shape": [
+        3,
+        641,
+        960
+      ],
+      "width": 960,
+      "height": 641
+    },
+    "horizontal_axis_flip": {
+      "tensor_shape": [
+        3,
+        641,
+        960
+      ],
+      "width": 960,
+      "height": 641
+    },
+    "vertical_axis_flip": {
+      "tensor_shape": [
+        3,
+        641,
+        960
+      ],
+      "width": 960,
+      "height": 641
+    },
+    "diagonal_stretch_10_percent": {
+      "tensor_shape": [
+        3,
+        706,
+        1056
+      ],
+      "width": 1056,
+      "height": 706
+    },
+    "rotate_left_10_degrees": {
+      "tensor_shape": [
+        3,
+        799,
+        1058
+      ],
+      "width": 1058,
+      "height": 799
+    },
+    "rotate_right_15_degrees": {
+      "tensor_shape": [
+        3,
+        869,
+        1094
+      ],
+      "width": 1094,
+      "height": 869
+    }
+  }
+}

@@ -1,0 +1,10 @@
+# Local datasets, caches and notebook autosaves.
+data/
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+.venv/
+.env
+# Large trained weights stay local; metrics and figures remain in Git.
+*.pth
+*.pt

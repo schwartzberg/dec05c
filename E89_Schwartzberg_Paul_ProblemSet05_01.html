@@ -7590,8 +7590,8 @@ PyTorch: 2.14.0+cpu | torchvision: 0.29.0+cpu
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="2.-Load-a-photograph-at-moderate-resolution">2. Load a photograph at moderate resolution<a class="anchor-link" href="#2.-Load-a-photograph-at-moderate-resolution">¶</a></h2><p>The photograph shows a Bengal tiger. It is credited to John and Karen Hollingsworth of the U.S. Fish and Wildlife Service and is listed as public domain in the United States on its <a href="https://commons.wikimedia.org/wiki/File:Panthera_tigris_tigris_original.jpg">Wikimedia Commons source page</a>.</p>
-<p>The saved copy is 960 x 641 pixels. This keeps the proportions of the source while giving enough detail for the demonstration. The repository includes this copy; the download runs only if it is missing. The code converts it to RGB, meaning red, green and blue colour channels.</p>
+<h2 id="2.-Load-a-photograph-at-moderate-resolution">2. Load a photograph at moderate resolution<a class="anchor-link" href="#2.-Load-a-photograph-at-moderate-resolution">¶</a></h2><p>The photograph shows a Bengal tiger. <br/><br/>It is credited to John and Karen Hollingsworth of the U.S. Fish and Wildlife Service and is listed as public domain in the United States on its <a href="https://commons.wikimedia.org/wiki/File:Panthera_tigris_tigris_original.jpg">Wikimedia Commons source page</a>.</p>
+<p>The saved copy is 960 x 641 pixels. <br/><br/>This keeps the proportions of the source while giving enough detail for the demonstration. <br/>The repository includes this copy; the download runs only if it is missing. <br/>The code converts it to RGB, meaning red, green and blue colour channels.</p>
 </div>
 </div>
 </div>
@@ -7644,9 +7644,9 @@ PyTorch: 2.14.0+cpu | torchvision: 0.29.0+cpu
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="3.-Define-a-10%25-stretch-along-one-diagonal">3. Define a 10% stretch along one diagonal<a class="anchor-link" href="#3.-Define-a-10%25-stretch-along-one-diagonal">¶</a></h2><p>We choose the line from the image's top-left corner to its bottom-right corner. The stretch lengthens distances parallel to that line by 10%, while leaving distances perpendicular to it unchanged. It acts about the image centre.</p>
-<p>The diagonal stretch needs a small custom transformation. <code>Compose</code> accepts a callable object: its <code>__call__</code> method receives an image and returns a transformed image. The calculation below finds the diagonal direction, builds the stretch, enlarges the canvas to hold the result, and samples the source image.</p>
-<p>For the numerical calculation, <code>u</code> is a unit vector along the diagonal. The matrix is <code>A = I + 0.10 * outer(u, u)</code>. It gives <code>A @ u = 1.10 * u</code> and leaves a perpendicular vector unchanged. Pillow uses the inverse matrix because it works backwards from each output pixel to the corresponding source position. Bilinear interpolation estimates values between source pixels; the new border is white.</p>
+<h2 id="3.-Define-a-10%25-stretch-along-one-diagonal">3. Define a 10% stretch along one diagonal<a class="anchor-link" href="#3.-Define-a-10%25-stretch-along-one-diagonal">¶</a></h2><p>We choose the line from the image's top-left corner to its bottom-right corner. <br/>The stretch lengthens distances parallel to that line by 10%, while leaving distances perpendicular to it unchanged. It acts about the image centre.</p>
+<p>The diagonal stretch needs a small custom transformation. <br/><code>Compose</code> accepts a callable object: its <code>__call__</code> method receives an image and returns a transformed image. <br/>The calculation below finds the diagonal direction, builds the stretch, enlarges the canvas to hold the result, and samples the source image.</p>
+<p>For the numerical calculation, <code>u</code> is a unit vector along the diagonal. <br/>The matrix is <code>A = I + 0.10 * outer(u, u)</code>. <br/>It gives <code>A @ u = 1.10 * u</code> and leaves a perpendicular vector unchanged. <br/>Pillow uses the inverse matrix because it works backwards from each output pixel to the corresponding source position. <br/>Bilinear interpolation estimates values between source pixels; the new border is white.</p>
 </div>
 </div>
 </div>
@@ -7655,7 +7655,7 @@ PyTorch: 2.14.0+cpu | torchvision: 0.29.0+cpu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DiagonalStretch</span><span class="p">:</span>
@@ -7702,8 +7702,8 @@ PyTorch: 2.14.0+cpu | torchvision: 0.29.0+cpu
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="4.-Build-five-separate-Compose-pipelines">4. Build five separate Compose pipelines<a class="anchor-link" href="#4.-Build-five-separate-Compose-pipelines">¶</a></h2><p>Each pipeline first changes the photograph, then calls <code>ToTensor</code>. For an RGB image, <code>ToTensor</code> stores three channels, puts channels before height and width, and scales pixel values from 0-255 to 0-1.</p>
-<p>Setting the flip probability to <code>1.0</code> makes the change happen every time. A rotation interval such as <code>(10, 10)</code> fixes the angle at 10 degrees. Positive rotation angles turn left (counter-clockwise); negative angles turn right (clockwise). <code>expand=True</code> enlarges the canvas to keep the rotated corners. The white border fills space outside the transformed photograph.</p>
-<p>The five operations are separate. Applying all five in one pipeline would produce one combined transformation and hide their individual effects. See the <a href="https://docs.pytorch.org/vision/stable/generated/torchvision.transforms.Compose.html">Compose documentation</a> and <a href="https://docs.pytorch.org/vision/stable/generated/torchvision.transforms.functional.rotate.html">rotation documentation</a>.</p>
+<p>Setting the flip probability to <code>1.0</code> makes the change happen every time. <br/>A rotation interval such as <code>(10, 10)</code> fixes the angle at 10 degrees. <br/>Positive rotation angles turn left (counter-clockwise); negative angles turn right (clockwise). <code>expand=True</code> enlarges the canvas to keep the rotated corners. <br/>The white border fills space outside the transformed photograph.</p>
+<p>The five operations are separate. <br/>Applying all five in one pipeline would produce one combined transformation and hide their individual effects. <br/>See the <a href="https://docs.pytorch.org/vision/stable/generated/torchvision.transforms.Compose.html">Compose documentation</a> <br/>and <a href="https://docs.pytorch.org/vision/stable/generated/torchvision.transforms.functional.rotate.html">rotation documentation</a>.</p>
 </div>
 </div>
 </div>
@@ -7712,7 +7712,7 @@ PyTorch: 2.14.0+cpu | torchvision: 0.29.0+cpu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Each Compose starts from the same photograph and ends with tensor conversion.</span>
@@ -7755,7 +7755,7 @@ PyTorch: 2.14.0+cpu | torchvision: 0.29.0+cpu
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="5.-Check-the-diagonal-scale">5. Check the diagonal scale<a class="anchor-link" href="#5.-Check-the-diagonal-scale">¶</a></h2><p>This short calculation checks the geometry. A unit length along the chosen diagonal becomes 1.10 units; a unit length perpendicular to it stays 1.00 units. Image interpolation can alter individual pixel values, but it does not change the intended geometric scale.</p>
+<h2 id="5.-Check-the-diagonal-scale">5. Check the diagonal scale<a class="anchor-link" href="#5.-Check-the-diagonal-scale">¶</a></h2><p>This short calculation checks the geometry. <br/>A unit length along the chosen diagonal becomes 1.10 units; a unit length perpendicular to it stays 1.00 units. <br/>Image interpolation can alter individual pixel values, but it does not change the intended geometric scale.</p>
 </div>
 </div>
 </div>
@@ -7764,7 +7764,7 @@ PyTorch: 2.14.0+cpu | torchvision: 0.29.0+cpu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Check the mathematical meaning of the stretch independently of the photograph.</span>
@@ -7802,7 +7802,7 @@ These are the geometric scales before resampling pixels.
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="6.-Display-and-save-the-results">6. Display and save the results<a class="anchor-link" href="#6.-Display-and-save-the-results">¶</a></h2><p>The figure shows the original and five transformed versions. <code>permute(1, 2, 0)</code> places the tensor dimensions in the order Matplotlib needs: height, width, channels. The titles state the operation and output size. We save each transformed PNG, the comparison figure and a JSON record of the settings.</p>
+<h2 id="6.-Display-and-save-the-results">6. Display and save the results<a class="anchor-link" href="#6.-Display-and-save-the-results">¶</a></h2><p>The figure shows the original and five transformed versions.<br/><code>permute(1, 2, 0)</code> <br/>places the tensor dimensions in the order Matplotlib needs: <br/>height, width, channels. <br/>The titles state the operation and output size. We save each transformed PNG, the comparison figure and a JSON record of the settings.</p>
 </div>
 </div>
 </div>
@@ -7811,7 +7811,7 @@ These are the geometric scales before resampling pixels.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Display the original and five separate results; save a static report and images.</span>

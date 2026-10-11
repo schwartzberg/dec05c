@@ -2,33 +2,69 @@
 
 Schwartzberg, Paul
 
-Solutions for the supplied HW5 assignment, developed one problem at a time. The assignment PDF defines the tasks. Some supplied lab guides cover other exercises and are used only where relevant.
+All four problems are complete. Each numbered notebook was executed from a fresh `cscie89` kernel and has a matching HTML report. The assignment PDF defines the tasks; the supplied CIFAR-10 homework guide covers a different exercise.
 
-## Progress
+## Submitted notebooks
 
-| Problem | Work | Status |
+| Problem | Notebook and HTML stem | Result |
 |---|---|---|
-| 1 | Five tiger image transformations using torchvision Compose | Complete; executed and visually checked |
-| 2 | BasicCNN with and without batch normalisation, each with and without augmentation | Pending |
-| 3 | VGG16 flower classification: frozen-feature stage and fine-tuning stage | Pending |
-| 4 | Grad-CAM for the Problem 3 stage 2 flower model | Pending |
+| 1 | `E89_Schwartzberg_Paul_ProblemSet05_01` | Five tiger transformations using torchvision Compose |
+| 2 | `E89_Schwartzberg_Paul_ProblemSet05_02` | Four original/BatchNorm and unaugmented/augmented CNN comparisons |
+| 3 | `E89_Schwartzberg_Paul_ProblemSet05_03` | VGG16 frozen-feature and fine-tuning stages, both tested on all images |
+| 4 | `E89_Schwartzberg_Paul_ProblemSet05_04` | Grad-CAM at a single convolution of the trained stage 2 model |
 
-The notebook filenames follow the assignment's pattern, beginning with `E89_Schwartzberg_Paul_ProblemSet05_`. Each problem will have an executed notebook and matching HTML export, with explanations beside the code.
+Submit the four `.ipynb` files and their four `.html` files. Each carries the name `Schwartzberg, Paul`. Explanations sit beside the code; the plots are embedded in the HTML. The notebooks include their solution definitions; sibling Python modules provide the same code for scripts.
 
-## Run Problem 1
+## Measured results
 
-Open `E89_Schwartzberg_Paul_ProblemSet05_01.ipynb` and select the `cscie89` kernel. Run its cells in order. The source image is included, so a fresh clone can reproduce the results without downloading it. A missing source image is downloaded automatically.
+All flower runs use the same stratified split: 2,569 training, 550 validation and 551 test images, with seed 42. Exact image paths are saved in `outputs/shared/split_manifest.json`. Checkpoint selection uses validation loss. Every reported test score uses all 551 test images.
 
-Alternatively, run `python 01_tiger_transformations.py` from this folder. Results are saved under `outputs/problem1/`.
+| Problem 2 condition | Selected epoch | Test accuracy | Test macro precision |
+|---|---:|---:|---:|
+| original_no_augmentation | 11 | 64.61% | 64.35% |
+| batchnorm_no_augmentation | 9 | 70.96% | 70.98% |
+| original_with_augmentation | 24 | 68.60% | 68.99% |
+| batchnorm_with_augmentation | 23 | 74.77% | 74.38% |
 
-The existing `cscie89` environment has Python 3.12.14, PyTorch 2.14.0+cpu and torchvision 0.29.0. `requirements.txt` records the package versions used. No additional packages are needed for Problem 1.
+| Problem 3 stage | Selected epoch | Test accuracy | Test macro precision |
+|---|---:|---:|---:|
+| stage1 | 5 | 87.11% | 87.49% |
+| stage2 | 3 | 89.29% | 89.87% |
 
-## Plan for the flower experiments
+Both VGG16 stages recognised the same five fixed gallery examples. The complete test report also records errors and a decline in rose recall after fine-tuning. Problem 4 correctly predicts its fixed validation daisy; Grad-CAM highlights part of its upper-right petals, while the yellow centre is weak. The notebook explains that limitation.
 
-Problem 2 follows `1_Augmentation_CNN_Classify_flowers.ipynb` in the Week5 folder. The comparison will use one fixed train/validation/test split and four conditions: the original model and a batch-normalised model, each trained with and without augmentation. Checkpoints will be selected by validation loss; final accuracy and macro precision will be reported over the entire reserved test split. Augmentation will apply only to training images.
+## Run everything yourself
 
-Problem 3 follows `3_FineTune_VGG16_PyTorch_Cat_Dog.ipynb`, adapting its binary head and loss to the five flower classes. Stage 1 trains a new classifier with frozen convolutional layers. Stage 2 unfreezes the final convolutional block. Both stages will be evaluated on the full test split, with one illustrated prediction per flower class.
+In Anaconda Prompt:
 
-Problem 4 will inspect the stage 2 model with Grad-CAM, following the method in lab 02. The plotted class and target layer will be stated.
+```bat
+conda activate cscie89
+cd /d "C:\Users\schwa\Documents\H_DCE\CSCI E-89 Deep Learning\Week5\Assignment\dec05c"
+python run_all.py
+```
 
-Datasets and large weight files are excluded from Git. Code, configuration, split records, metrics, figures, notebooks and HTML reports will be tracked. Every submitted notebook and HTML report will carry the name `Schwartzberg, Paul`.
+This executes all four notebooks in order, trains the four CNN conditions and both VGG16 stages again, saves the executed notebooks and HTML reports, and runs `check_submission.py`. It does not replace training with cached metrics. Allow roughly half an hour on this CPU; runtime depends on other work on the computer. The recorded VGG16 run took about 18.6 minutes while the CNN comparisons ran separately at the same time.
+
+Save and close notebooks before running this command. The runner backs up each file in the Windows temporary folder and checks for concurrent edits before replacing outputs. A failed run retains the original and saves a diagnostic copy. To run only one problem, use `python run_all.py --problems 2` (or another number). Problem 4 needs the checkpoint created by Problem 3.
+
+To run interactively, start `jupyter notebook` from this folder, select the `cscie89` kernel, and use **Run All Cells** in each numbered notebook, in order. The current HTML files show the completed runs; your rerun will update them.
+
+The existing environment has Python 3.12.14, PyTorch 2.14.0+cpu and torchvision 0.29.0. `requirements.txt` records packages and `outputs/environment.json` records the actual environment. No additional packages were installed for Problems 2-4. A fresh clone downloads Flower Photos and official ImageNet VGG16 weights when needed; an existing HW4 flower copy can be reused.
+
+## Methods
+
+Problem 2 adapts the three-block `BasicCNN` in `1_Augmentation_CNN_Classify_flowers.ipynb`. It uses 64-pixel images, batch 64, Adam at 0.001 and 30 epochs, following the course code. `BatchNorm2d` follows every convolution and precedes ReLU. Shared convolution and linear starting values are copied and checked across all four runs. Augmentation changes only training images: left-right flips, small rotations and mild brightness/contrast variation. All complete states, including BatchNorm buffers, are selected by validation loss and reloaded before evaluation.
+
+Problem 3 adapts `3_FineTune_VGG16_PyTorch_Cat_Dog.ipynb` to five flower classes. Images are 150 x 150 with ImageNet normalisation. Stage 1 trains a new five-class head for five epochs with frozen convolution layers. Stage 2 unfreezes only the final convolutional block and trains for three epochs. The course RMSprop settings are retained. Both stages include the incoming model as an epoch-zero selection candidate and use validation loss with patience 3. Exact tensor comparisons verify the frozen layers and saved reloads.
+
+Problem 4 follows Lab 02's class-specific Grad-CAM calculation at VGG16 `features[28]`, a single `Conv2d`. It uses the predicted class of the first sorted validation daisy, selected before prediction. The raw map is 9 x 9 and is enlarged to 150 x 150 for display. Direct gradients avoid backward-hook issues with in-place ReLU. The forward scores and saved model state remain unchanged.
+
+## Saved files and checks
+
+Scripts `01_tiger_transformations.py` through `04_vgg16_gradcam.py` reproduce each problem. Shared modules are `hw5_common.py`, `hw5_basic_cnn.py` and `hw5_vgg.py`. `run_all.py` executes notebooks and exports HTML.
+
+Code, the tiger asset, split records, histories, predictions, numerical maps, figures, notebooks and HTML reports are tracked in Git. Datasets, downloaded ImageNet weights and large trained `.pth` checkpoints remain local and are ignored. Running the notebooks recreates the checkpoints. Problem 3 writes `outputs/problem3/stage1_vgg16.pth` and `stage2_vgg16.pth`; Problem 4 reads the latter.
+
+`python check_submission.py` verifies saved artifacts without retraining: successful notebook execution and HTML files, split separation and coverage, recomputed test metrics, selected checkpoints, shared CNN starting weights, BatchNorm buffers, frozen VGG16 layers, gallery predictions and Grad-CAM records. It writes `outputs/submission_validation.json` only when every check passes.
+
+`outputs/execution_log.json` records the notebook runs. Full measured results and conclusions are in the notebooks and `outputs/problem1/` through `outputs/problem4/`. One seed and one split were used; variation across seeds was not measured.

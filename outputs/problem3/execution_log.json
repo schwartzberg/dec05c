@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "started_utc": "2026-10-11T18:48:44.896895Z",
+  "finished_utc": "2026-10-11T19:07:18.328794Z",
+  "elapsed_seconds": 1113.431899,
+  "kernel_name": "cscie89",
+  "code_cells": 9,
+  "device": "cpu",
+  "threads": 4,
+  "scope": "All nine code cells executed in order; both stages trained and both full test sets evaluated."
+}

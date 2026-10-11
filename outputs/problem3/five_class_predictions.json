@@ -1,0 +1,72 @@
+[
+  {
+    "stage": "stage1",
+    "path": "daisy/10466558316_a7198b87e2.jpg",
+    "true_class": "daisy",
+    "predicted_class": "daisy",
+    "score": 0.9978992938995361
+  },
+  {
+    "stage": "stage2",
+    "path": "daisy/10466558316_a7198b87e2.jpg",
+    "true_class": "daisy",
+    "predicted_class": "daisy",
+    "score": 0.9999938011169434
+  },
+  {
+    "stage": "stage1",
+    "path": "dandelion/10043234166_e6dd915111_n.jpg",
+    "true_class": "dandelion",
+    "predicted_class": "dandelion",
+    "score": 0.9653844833374023
+  },
+  {
+    "stage": "stage2",
+    "path": "dandelion/10043234166_e6dd915111_n.jpg",
+    "true_class": "dandelion",
+    "predicted_class": "dandelion",
+    "score": 0.9988460540771484
+  },
+  {
+    "stage": "stage1",
+    "path": "roses/11233672494_d8bf0a3dbf_n.jpg",
+    "true_class": "roses",
+    "predicted_class": "roses",
+    "score": 0.9542476534843445
+  },
+  {
+    "stage": "stage2",
+    "path": "roses/11233672494_d8bf0a3dbf_n.jpg",
+    "true_class": "roses",
+    "predicted_class": "roses",
+    "score": 0.9856730699539185
+  },
+  {
+    "stage": "stage1",
+    "path": "sunflowers/1044296388_912143e1d4.jpg",
+    "true_class": "sunflowers",
+    "predicted_class": "sunflowers",
+    "score": 0.9607974290847778
+  },
+  {
+    "stage": "stage2",
+    "path": "sunflowers/1044296388_912143e1d4.jpg",
+    "true_class": "sunflowers",
+    "predicted_class": "sunflowers",
+    "score": 0.99949049949646
+  },
+  {
+    "stage": "stage1",
+    "path": "tulips/100930342_92e8746431_n.jpg",
+    "true_class": "tulips",
+    "predicted_class": "tulips",
+    "score": 0.957850456237793
+  },
+  {
+    "stage": "stage2",
+    "path": "tulips/100930342_92e8746431_n.jpg",
+    "true_class": "tulips",
+    "predicted_class": "tulips",
+    "score": 0.9996227025985718
+  }
+]

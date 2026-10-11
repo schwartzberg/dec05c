@@ -1,0 +1,41 @@
+{
+  "author": "Schwartzberg, Paul",
+  "checkpoint": "outputs/problem3/stage2_vgg16.pth",
+  "stage": "stage2",
+  "best_epoch": 3,
+  "selection": "First sorted daisy path from the saved validation split",
+  "image": "daisy/10140303196_b88d3d6cec.jpg",
+  "dataset": "Flower Photos",
+  "true_class": "daisy",
+  "predicted_class": "daisy",
+  "predicted_score": 0.999984622001648,
+  "probabilities": {
+    "daisy": 0.999984622001648,
+    "dandelion": 2.2424812584631582e-07,
+    "roses": 7.648431887830043e-10,
+    "sunflowers": 1.4720458239025902e-05,
+    "tulips": 4.244510023454495e-07
+  },
+  "target_layer": "features[28] (VGG16 conv5_3, a single Conv2d)",
+  "activation_shape": [
+    1,
+    512,
+    9,
+    9
+  ],
+  "coarse_heatmap_shape": [
+    9,
+    9
+  ],
+  "display_shape": [
+    150,
+    150
+  ],
+  "cam_targets": {
+    "daisy": {
+      "positive_evidence": true
+    }
+  },
+  "weights_unchanged": true,
+  "method": "Lab 02 Grad-CAM; direct class-logit gradients via autograd.grad"
+}

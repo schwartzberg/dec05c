@@ -1,11 +1,11 @@
 {
-  "status": "completed",
-  "started_utc": "2026-10-11T18:48:44.896895Z",
-  "finished_utc": "2026-10-11T19:07:18.328794Z",
-  "elapsed_seconds": 1113.431899,
-  "kernel_name": "cscie89",
+  "author": "Schwartzberg, Paul",
+  "notebook": "E89_Schwartzberg_Paul_ProblemSet05_01.ipynb",
+  "scope": "Problem 3 within the combined notebook",
+  "kernel": "cscie89",
+  "started_utc": "2026-10-11T20:32:59.061524Z",
+  "finished_utc": "2026-10-11T20:54:15.323553Z",
+  "elapsed_seconds": 1276.262029,
   "code_cells": 9,
-  "device": "cpu",
-  "threads": 4,
-  "scope": "All nine code cells executed in order; both stages trained and both full test sets evaluated."
+  "all_code_cells_executed": true
 }

@@ -148,7 +148,7 @@
       0.6890909090909091
     ]
   },
-  "training_seconds": 131.2717153999838,
+  "training_seconds": 105.11021489999257,
   "reload_verified": true,
   "test": {
     "count": 551,

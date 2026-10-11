@@ -1,8 +1,8 @@
-"""Schwartzberg, Paul. Execute HW5 notebooks and create matching HTML reports.
+"""Schwartzberg, Paul. Execute the combined HW5 notebook and export its HTML.
 
 Run from the cscie89 environment:
     python run_all.py
-Or choose one problem:
+Or run an archived problem separately:
     python run_all.py --problems 2
 Training cells always train again. This does not substitute cached training metrics.
 """
@@ -31,8 +31,8 @@ class ProgressClient(NotebookClient):
             print(msg["content"]["text"], end="", flush=True)
         return super().process_message(msg, cell, cell_index)
 
-def run_problem(number, kernel, timeout):
-    notebook_path = ROOT / f"E89_Schwartzberg_Paul_ProblemSet05_{number:02d}.ipynb"
+def run_notebook(notebook_path, kernel, timeout, label):
+    notebook_path = Path(notebook_path)
     before = notebook_path.read_bytes()
     digest = hashlib.sha256(before).hexdigest()
     # Keep a recoverable copy outside the repository before replacing outputs.
@@ -44,7 +44,7 @@ def run_problem(number, kernel, timeout):
     nbformat.validate(notebook)
     started = datetime.now(timezone.utc).isoformat()
     tick = time.perf_counter()
-    print(f"\nRunning Problem {number}: {notebook_path.name}", flush=True)
+    print(f"\nRunning {label}: {notebook_path.name}", flush=True)
     client = ProgressClient(notebook, kernel_name=kernel, timeout=timeout,
                             resources={"metadata": {"path": str(ROOT)}})
     try:
@@ -73,35 +73,38 @@ def run_problem(number, kernel, timeout):
     html, _ = HTMLExporter().from_notebook_node(notebook)
     html_path = notebook_path.with_suffix(".html")
     html_path.write_text("\n".join(line.rstrip() for line in html.splitlines()) + "\n", encoding="utf-8")
-    print(f"Problem {number} passed. Notebook and HTML saved.", flush=True)
-    return {"problem": number, **dict(notebook.metadata["hw5_execution"])}
+    print(f"{label} passed. Notebook and HTML saved.", flush=True)
+    return {"notebook": notebook_path.name, **dict(notebook.metadata["hw5_execution"])}
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--problems", type=int, nargs="+", choices=range(1, 5), default=[1, 2, 3, 4])
+    parser.add_argument("--problems", type=int, nargs="+", choices=range(1, 5), default=None, help="Optional: run selected archived individual problems instead of the combined notebook.")
     parser.add_argument("--kernel", default="cscie89")
     parser.add_argument("--timeout", type=int, default=7200, help="Maximum seconds for any one code cell.")
     args = parser.parse_args()
-    log_path = ROOT / "outputs/execution_log.json"
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    problems = sorted(set(args.problems))
+    combined = args.problems is None
+    if combined:
+        jobs = [(ROOT / "E89_Schwartzberg_Paul_ProblemSet05_01.ipynb", "combined HW5 notebook")]
+    else:
+        jobs = [(ROOT / "individual_problems" / f"E89_Schwartzberg_Paul_ProblemSet05_{number:02d}.ipynb",
+                 f"archived Problem {number}") for number in sorted(set(args.problems))]
     # Catch source errors before starting any long training run.
-    for problem in problems:
-        path = ROOT / f"E89_Schwartzberg_Paul_ProblemSet05_{problem:02d}.ipynb"
+    for path, label in jobs:
         notebook = nbformat.read(path, as_version=4)
         nbformat.validate(notebook)
         for cell in notebook.cells:
             if cell.cell_type == "code" and cell.source.strip():
                 ast.parse(cell.source)
-    previous = json.loads(log_path.read_text(encoding="utf-8")) if log_path.exists() else {"runs": []}
-    runs_by_problem = {run["problem"]: run for run in previous["runs"]}
-    for problem in problems:
-        runs_by_problem[problem] = run_problem(problem, args.kernel, args.timeout)
-        runs = [runs_by_problem[key] for key in sorted(runs_by_problem)]
-        log_path.write_text(json.dumps({"author": "Schwartzberg, Paul", "runs": runs}, indent=2) + "\n", encoding="utf-8")
-    if problems == [1, 2, 3, 4]:
+    log_path = ROOT / "outputs" / ("execution_log.json" if combined else "individual_execution_log.json")
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    runs = []
+    for path, label in jobs:
+        runs.append(run_notebook(path, args.kernel, args.timeout, label))
+        log_path.write_text(json.dumps({"author": "Schwartzberg, Paul", "layout": "combined" if combined else "individual",
+                                        "runs": runs}, indent=2) + "\n", encoding="utf-8")
+    if combined:
         subprocess.run([sys.executable, str(ROOT / "check_submission.py")], cwd=ROOT, check=True)
-    print("\nAll requested notebooks executed successfully.", flush=True)
+    print("\nAll requested cells executed successfully.", flush=True)
 
 if __name__ == "__main__":
     main()

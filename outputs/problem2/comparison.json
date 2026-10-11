@@ -151,7 +151,7 @@
           0.6745454545454546
         ]
       },
-      "training_seconds": 108.1809174999944,
+      "training_seconds": 130.79200650000712,
       "reload_verified": true,
       "test": {
         "count": 551,
@@ -5358,7 +5358,7 @@
           0.7181818181818181
         ]
       },
-      "training_seconds": 125.18497010000283,
+      "training_seconds": 148.09060060000047,
       "reload_verified": true,
       "test": {
         "count": 551,
@@ -10565,7 +10565,7 @@
           0.6890909090909091
         ]
       },
-      "training_seconds": 131.2717153999838,
+      "training_seconds": 105.11021489999257,
       "reload_verified": true,
       "test": {
         "count": 551,
@@ -15772,7 +15772,7 @@
           0.7345454545454545
         ]
       },
-      "training_seconds": 197.49088960001245,
+      "training_seconds": 167.21167160000186,
       "reload_verified": true,
       "test": {
         "count": 551,

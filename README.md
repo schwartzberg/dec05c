@@ -2,18 +2,18 @@
 
 Schwartzberg, Paul
 
-All four problems are complete. Each numbered notebook was executed from a fresh `cscie89` kernel and has a matching HTML report. The assignment PDF defines the tasks; the supplied CIFAR-10 homework guide covers a different exercise.
+All four problems are complete. The combined notebook was run from the beginning in one fresh `cscie89` kernel. All 28 code cells passed, and its HTML export contains the completed run. The assignment PDF defines the tasks; the supplied CIFAR-10 homework guide covers a different exercise.
 
-## Submitted notebooks
+## Submission files
 
-| Problem | Notebook and HTML stem | Result |
-|---|---|---|
-| 1 | `E89_Schwartzberg_Paul_ProblemSet05_01` | Five tiger transformations using torchvision Compose |
-| 2 | `E89_Schwartzberg_Paul_ProblemSet05_02` | Four original/BatchNorm and unaugmented/augmented CNN comparisons |
-| 3 | `E89_Schwartzberg_Paul_ProblemSet05_03` | VGG16 frozen-feature and fine-tuning stages, both tested on all images |
-| 4 | `E89_Schwartzberg_Paul_ProblemSet05_04` | Grad-CAM at a single convolution of the trained stage 2 model |
+The complete submission is one notebook and its matching HTML export:
 
-Submit the four `.ipynb` files and their four `.html` files. Each carries the name `Schwartzberg, Paul`. Explanations sit beside the code; the plots are embedded in the HTML. The notebooks include their solution definitions; sibling Python modules provide the same code for scripts.
+- `E89_Schwartzberg_Paul_ProblemSet05_01.ipynb`
+- `E89_Schwartzberg_Paul_ProblemSet05_01.html`
+
+All four problems appear in this notebook, with a contents list, numbered sections, code, results and explanations. Shared data helpers are defined once in Problem 2; the VGG16 architecture is defined in Problem 3 and reused for Grad-CAM in Problem 4. The notebook contains its solution definitions and requires no local helper-module imports.
+
+The earlier separate notebooks and their HTML reports are kept in `individual_problems/` as working records. They are not additional submission files.
 
 ## Measured results
 
@@ -43,11 +43,11 @@ cd /d "C:\Users\schwa\Documents\H_DCE\CSCI E-89 Deep Learning\Week5\Assignment\d
 python run_all.py
 ```
 
-This executes all four notebooks in order, trains the four CNN conditions and both VGG16 stages again, saves the executed notebooks and HTML reports, and runs `check_submission.py`. It does not replace training with cached metrics. Allow roughly half an hour on this CPU; runtime depends on other work on the computer. The recorded VGG16 run took about 18.6 minutes while the CNN comparisons ran separately at the same time.
+This executes every cell of the combined notebook in one fresh kernel, trains the four CNN conditions and both VGG16 stages again, saves the executed notebook and its HTML report, and runs `check_submission.py`. It does not replace training with cached metrics. Allow roughly half an hour on this CPU; runtime depends on other work on the computer. The recorded combined run took 31.1 minutes, including all training and notebook outputs.
 
-Save and close notebooks before running this command. The runner backs up each file in the Windows temporary folder and checks for concurrent edits before replacing outputs. A failed run retains the original and saves a diagnostic copy. To run only one problem, use `python run_all.py --problems 2` (or another number). Problem 4 needs the checkpoint created by Problem 3.
+Save and close notebooks before running this command. The runner backs up the notebook in the Windows temporary folder and checks for concurrent edits before replacing outputs. A failed run retains the original and saves a diagnostic copy. To run an earlier separate working notebook, use `python run_all.py --problems 2` (or another number). This optional command uses `individual_problems/`; the default command runs the combined submission. Problem 4 needs the checkpoint created by Problem 3.
 
-To run interactively, start `jupyter notebook` from this folder, select the `cscie89` kernel, and use **Run All Cells** in each numbered notebook, in order. The current HTML files show the completed runs; your rerun will update them.
+To run interactively, start `jupyter notebook` from this folder, select the `cscie89` kernel, and open `E89_Schwartzberg_Paul_ProblemSet05_01.ipynb`, restart its kernel, and use **Run All Cells**. Run the whole notebook from top to bottom; later sections reuse variable names. The HTML shows the completed run; your rerun will update it.
 
 The existing environment has Python 3.12.14, PyTorch 2.14.0+cpu and torchvision 0.29.0. `requirements.txt` records packages and `outputs/environment.json` records the actual environment. No additional packages were installed for Problems 2-4. A fresh clone downloads Flower Photos and official ImageNet VGG16 weights when needed; an existing HW4 flower copy can be reused.
 
@@ -61,10 +61,10 @@ Problem 4 follows Lab 02's class-specific Grad-CAM calculation at VGG16 `feature
 
 ## Saved files and checks
 
-Scripts `01_tiger_transformations.py` through `04_vgg16_gradcam.py` reproduce each problem. Shared modules are `hw5_common.py`, `hw5_basic_cnn.py` and `hw5_vgg.py`. `run_all.py` executes notebooks and exports HTML.
+Scripts `01_tiger_transformations.py` through `04_vgg16_gradcam.py` reproduce each problem. Shared modules are `hw5_common.py`, `hw5_basic_cnn.py` and `hw5_vgg.py`. `run_all.py` executes the combined notebook and exports its HTML.
 
 Code, the tiger asset, split records, histories, predictions, numerical maps, figures, notebooks and HTML reports are tracked in Git. Datasets, downloaded ImageNet weights and large trained `.pth` checkpoints remain local and are ignored. Running the notebooks recreates the checkpoints. Problem 3 writes `outputs/problem3/stage1_vgg16.pth` and `stage2_vgg16.pth`; Problem 4 reads the latter.
 
-`python check_submission.py` verifies saved artifacts without retraining: successful notebook execution and HTML files, split separation and coverage, recomputed test metrics, selected checkpoints, shared CNN starting weights, BatchNorm buffers, frozen VGG16 layers, gallery predictions and Grad-CAM records. It writes `outputs/submission_validation.json` only when every check passes.
+`python check_submission.py` verifies saved artifacts without retraining: successful combined-notebook execution and its HTML file, split separation and coverage, recomputed test metrics, selected checkpoints, shared CNN starting weights, BatchNorm buffers, frozen VGG16 layers, gallery predictions and Grad-CAM records. It writes `outputs/submission_validation.json` only when every check passes.
 
 `outputs/execution_log.json` records the notebook runs. Full measured results and conclusions are in the notebooks and `outputs/problem1/` through `outputs/problem4/`. One seed and one split were used; variation across seeds was not measured.

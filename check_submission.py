@@ -11,6 +11,7 @@ import ast
 import hashlib
 import json
 import math
+import re
 import sys
 
 import nbformat
@@ -45,39 +46,74 @@ def file_digest(path):
 
 
 def check_artifacts():
-    """Require executed, valid notebooks and HTML containing embedded plots."""
+    """Check the combined submission, retaining support for the earlier layout."""
+    main_path = ROOT / "E89_Schwartzberg_Paul_ProblemSet05_01.ipynb"
+    main_notebook = nbformat.read(main_path, as_version=4) if main_path.is_file() else None
+    combined = main_notebook is not None and main_notebook.metadata.get("hw5_layout") == "combined"
+    if combined:
+        paths = [(main_path, main_notebook, "Combined notebook")]
+    else:
+        # The earlier individual notebooks may be kept as working records.
+        legacy_root = ROOT
+        if not all((legacy_root / f"E89_Schwartzberg_Paul_ProblemSet05_{number:02d}.ipynb").is_file()
+                   for number in range(1, 5)):
+            legacy_root = ROOT / "individual_problems"
+        paths = [(legacy_root / f"E89_Schwartzberg_Paul_ProblemSet05_{number:02d}.ipynb",
+                  None, f"Problem {number}") for number in range(1, 5)]
     artifacts = []
-    for number in range(1, 5):
-        path = ROOT / f"E89_Schwartzberg_Paul_ProblemSet05_{number:02d}.ipynb"
-        notebook = nbformat.read(path, as_version=4)
+    for index, (path, notebook, label) in enumerate(paths, 1):
+        if notebook is None:
+            notebook = nbformat.read(path, as_version=4)
         nbformat.validate(notebook)
         text = "\n".join(cell.source for cell in notebook.cells)
-        require(AUTHOR in text, f"Problem {number}: full author name is missing")
+        require(AUTHOR in text, f"{label}: full author name is missing")
         code_cells = [cell for cell in notebook.cells
                       if cell.cell_type == "code" and cell.source.strip()]
-        require(code_cells, f"Problem {number}: no code cells")
+        require(code_cells, f"{label}: no code cells")
+        coverage = {}
+        if combined:
+            for number in range(1, 5):
+                require(re.search(rf"^## Problem {number}:", text, flags=re.MULTILINE),
+                        f"Combined notebook: Problem {number} heading is missing")
+                coverage[number] = sum(cell.metadata.get("hw5_problem") == number
+                                       for cell in code_cells)
+            require(coverage == {1: 6, 2: 9, 3: 9, 4: 4} and len(code_cells) == 28,
+                    "Combined notebook: expected all 28 code cells with 6/9/9/4 problem coverage")
+            require(all(cell.metadata.get("hw5_problem") in (1, 2, 3, 4)
+                        for cell in code_cells),
+                    "Combined notebook: a code cell has no problem attribution")
         counts = []
-        for index, cell in enumerate(code_cells, 1):
+        for cell_index, cell in enumerate(code_cells, 1):
             ast.parse(cell.source)
             require(cell.execution_count is not None,
-                    f"Problem {number}: code cell {index} was not executed")
+                    f"{label}: code cell {cell_index} was not executed")
             require(not any(output.output_type == "error"
                             for output in cell.get("outputs", [])),
-                    f"Problem {number}: code cell {index} has an error output")
+                    f"{label}: code cell {cell_index} has an error output")
             counts.append(int(cell.execution_count))
         require(counts == sorted(counts) and len(set(counts)) == len(counts),
-                f"Problem {number}: cells were not executed in increasing order")
+                f"{label}: cells were not executed in increasing order")
         html_path = path.with_suffix(".html")
         html = html_path.read_text(encoding="utf-8")
-        require(AUTHOR in html, f"Problem {number}: HTML author name is missing")
+        require(AUTHOR in html, f"{label}: HTML author name is missing")
         require("data:image/png;base64," in html,
-                f"Problem {number}: HTML has no embedded PNG output")
-        artifacts.append({
-            "problem": number, "code_cells": len(code_cells),
+                f"{label}: HTML has no embedded PNG output")
+        artifact = {
+            "layout": "combined" if combined else "individual",
+            "problems": [1, 2, 3, 4] if combined else [index],
+            "code_cells": len(code_cells),
             "notebook_sha256": file_digest(path),
             "html_sha256": file_digest(html_path),
-        })
-    CHECKS.append("All four notebooks are valid, executed in order and free of error outputs; their HTML reports contain the author and embedded plots.")
+        }
+        if combined:
+            require(all(f"Problem {number}:" in html for number in range(1, 5)),
+                    "Combined HTML: not all four problem headings are present")
+            artifact["code_cells_by_problem"] = coverage
+        artifacts.append(artifact)
+    if combined:
+        CHECKS.append("The single combined notebook contains all four problems and all 28 code cells, executed in order without errors; its HTML contains the author, problem headings and embedded plots.")
+    else:
+        CHECKS.append("All four individual notebooks are valid, executed in order and free of error outputs; their HTML reports contain the author and embedded plots.")
     return artifacts
 
 

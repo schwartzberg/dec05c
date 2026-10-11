@@ -1,9 +1,9 @@
 {
   "author": "Schwartzberg, Paul",
-  "validated_utc": "2026-10-11T19:11:37.288384+00:00",
+  "validated_utc": "2026-10-11T20:55:39.991264+00:00",
   "passed": true,
   "checks": [
-    "All four notebooks are valid, executed in order and free of error outputs; their HTML reports contain the author and embedded plots.",
+    "The single combined notebook contains all four problems and all 28 code cells, executed in order without errors; its HTML contains the author, problem headings and embedded plots.",
     "The shared seed-42 split covers 3,670 images exactly once, with 2,569/550/551 non-overlapping train/validation/test records.",
     "Problem 2 contains all four controlled conditions, matching initial weights and split digests, complete 30-epoch histories, validation-selected checkpoints and recomputed full-test metrics.",
     "Both VGG stages use the entire test split and validation-selected histories; stage 1 preserves official ImageNet features, stage 2 preserves blocks 1-4, and each gallery covers all five classes.",
@@ -11,28 +11,22 @@
   ],
   "artifacts": [
     {
-      "problem": 1,
-      "code_cells": 6,
-      "notebook_sha256": "2554f533a38f5c1d829e43754fa015776a8ce5f09297bc518577acbc8dcb5c3c",
-      "html_sha256": "3541b40b9d90a43d75e39162afbde9d05414e693cf44cd199d7d1185eb58e45e"
-    },
-    {
-      "problem": 2,
-      "code_cells": 9,
-      "notebook_sha256": "f8966966e93653a39652b8f3b9449983358c793ab0abe3d388fdda95896426a9",
-      "html_sha256": "212b4e2b3987bec27362c1f1bdc3848f8ad5fda548a0811a20327412c1ed27ea"
-    },
-    {
-      "problem": 3,
-      "code_cells": 9,
-      "notebook_sha256": "6561068d83961761adb4b331100dcf2cb6859d15ce8167448da282ca8a2bc80d",
-      "html_sha256": "fb7f138622a9c941dedf5acdd3aec6bc6270eadc971a9f2c11f97b1e740d6e1d"
-    },
-    {
-      "problem": 4,
-      "code_cells": 6,
-      "notebook_sha256": "f2505c1464942f1c71fcf84644b84bca999b6fc7065b1fa558302a3200f3ce5d",
-      "html_sha256": "22f410af82770d0ce65063cffc2a263111374658a608b548c911bb44aa301972"
+      "layout": "combined",
+      "problems": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "code_cells": 28,
+      "notebook_sha256": "b25a283cd97985a3cbede630aed3336d428e4a86692181d5751f05f392238fed",
+      "html_sha256": "29382f08c15b07871b46c04d6086b4d0203d7cea2bb59a821e0b7d23b7663800",
+      "code_cells_by_problem": {
+        "1": 6,
+        "2": 9,
+        "3": 9,
+        "4": 4
+      }
     }
   ],
   "split_sha256": "c9ec6f34c9228118659de17e92cebce224c61aafdb8dd28674bb17af648c4875",
